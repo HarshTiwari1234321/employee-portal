@@ -9,7 +9,7 @@ import joblib
 import pandas as pd
 from PIL import Image
 
-st.set_page_config(page_title="Diabetes Prediction App", page_icon=None, layout='centered', initial_sidebar_state='auto')
+st.set_page_config(page_title="Check Leave Availability", page_icon=None, layout='centered', initial_sidebar_state='auto')
 
 # In[ ]:
 
@@ -29,27 +29,27 @@ def inference(row, scaler, model, cols):
     X = scaler.transform(df)
     features = pd.DataFrame(X, columns = cols)
     if (model.predict(features)==0):
-        return "This is a healthy person!"
-    else: return "This person has high chances of having diabetics!"
+        return "Yes"
+    else: return "No"
 
 
 # In[ ]:
 
 
-st.title('Diabetes Prediction App')
-st.write('The data for the following example is originally from the National Institute of Diabetes and Digestive and Kidney Diseases and contains information on females at least 21 years old of Pima Indian heritage. This is a sample application and cannot be used as a substitute for real medical advice.')
+st.title('Check Leave Availability')
+st.write('An application that considers various parameters based on them, outputs whether a leave could be given to an employee.')
 image = Image.open('data/diabetes_image.jpg')
 st.image(image, use_column_width=True)
-st.write('Please fill in the details of the person under consideration in the left sidebar and click on the button below!')
+st.write('Please fill in the details of the employee under consideration in the left sidebar and click on the button below!')
 
-age =           st.sidebar.number_input("Age in Years", 1, 150, 25, 1)
-pregnancies =   st.sidebar.number_input("Number of Pregnancies", 0, 20, 0, 1)
-glucose =       st.sidebar.slider("Glucose Level", 0, 200, 25, 1)
-skinthickness = st.sidebar.slider("Skin Thickness", 0, 99, 20, 1)
-bloodpressure = st.sidebar.slider('Blood Pressure', 0, 122, 69, 1)
-insulin =       st.sidebar.slider("Insulin", 0, 846, 79, 1)
-bmi =           st.sidebar.slider("BMI", 0.0, 67.1, 31.4, 0.1)
-dpf =           st.sidebar.slider("Diabetics Pedigree Function", 0.000, 2.420, 0.471, 0.001)
+age =           st.sidebar.number_input("CTC per annum", 1, 60, 25, 1)
+pregnancies =   st.sidebar.number_input("Number Of Accidental Leaves taken", 0, 20, 0, 1)
+glucose =       st.sidebar.slider("Casual Leave Spend", 0, 200, 25, 1)
+skinthickness = st.sidebar.slider("Medical Leave Spend", 0, 99, 20, 1)
+bloodpressure = st.sidebar.slider('Study Leave Spend', 0, 122, 69, 1)
+insulin =       st.sidebar.slider("Earned Leave Spend", 0, 846, 79, 1)
+bmi =           st.sidebar.slider("Weeks Spend in Leaves", 0.0, 67.1, 31.4, 0.1)
+dpf =           st.sidebar.slider("Employee Improvement Index",  0.000, 2.420, 0.471, 0.001)
 
 row = [pregnancies, glucose, bloodpressure, skinthickness, insulin, bmi, dpf, age]
 
@@ -57,7 +57,7 @@ row = [pregnancies, glucose, bloodpressure, skinthickness, insulin, bmi, dpf, ag
 # In[ ]:
 
 
-if (st.button('Find Health Status')):
+if (st.button('Whether Leave can be assigned:')):
     cols = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
     sc, model = load('models/scaler.joblib', 'models/model.joblib')
     result = inference(row, sc, model, cols)
